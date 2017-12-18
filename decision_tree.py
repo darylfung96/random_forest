@@ -5,6 +5,12 @@ class DecisionTree:
         self.max_depth = max_depth
         self.minimum_sample_split = minimum_sample_split
 
+    def fit(self, X, y):
+        pass
+
+    def _build_tree(self):
+        pass
+
     def _find_best_split(self, X, y, feature_indexes):
 
         for feature_index in feature_indexes:
@@ -32,5 +38,15 @@ class DecisionTree:
         X_left, y_left, X_right, y_right = np.array(X_left), np.array(y_left), np.array(X_right), np.array(y_right)
 
         return X_left, y_left, X_right, y_right
+
+
+
+class TreeNode:
+    def __init__(self, leftNode, rightNode):
+        self.leftNode = None
+        self.rightNode = None
+
+
+
 
 
