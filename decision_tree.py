@@ -1,4 +1,4 @@
-
+import numpy as np
 
 class DecisionTree:
     def __init__(self, max_depth=10, minimum_sample_split=2):
@@ -17,6 +17,20 @@ class DecisionTree:
         pass
 
     def _split(self, X, y, feature_index, threshold):
-        pass
+        X_left = []
+        y_left = []
+        X_right = []
+        y_right = []
+        for i in range(len(X)):
+            if X[i][feature_index] <= threshold:
+                X_left.append(X[i])
+                y_left.append(y[i])
+            else:
+                X_right.append(X[i])
+                y_right.append(y[i])
+
+        X_left, y_left, X_right, y_right = np.array(X_left), np.array(y_left), np.array(X_right), np.array(y_right)
+
+        return X_left, y_left, X_right, y_right
 
 
