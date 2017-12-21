@@ -7,6 +7,7 @@ class DecisionTree:
     def __init__(self, max_depth=10, minimum_sample_split=2):
         self.max_depth = max_depth
         self.minimum_sample_split = minimum_sample_split
+        self.rootNode = None
 
     def fit(self, X, y, is_random_forest=True):
         num_features = X.shape[1]
@@ -18,11 +19,19 @@ class DecisionTree:
         else:
             feature_indexes = num_features
 
-        self._build_tree(X, y, feature_indexes)
+        self.rootNode = self._build_tree(X, y, feature_indexes, depth=0)
 
     # do recursion in build tree function
-    def _build_tree(self, X, y, feature_indexes):
-        pass
+    def _build_tree(self, X, y, feature_indexes, depth):
+
+        if depth == self.max_depth:
+            return
+
+        best_feature_index, best_threshold = self._find_best_split(X, y, feature_indexes=feature_indexes)
+        leftNode = self._build_tree(X, y, feature_indexes, depth=depth+1)
+        rightNode = self._build_tree(X, y, feature_indexes, depth=depth+1)
+
+        return TreeNode(leftNode, rightNode, best_feature_index, best_threshold)
 
     def _find_best_split(self, X, y, feature_indexes):
 
@@ -65,11 +74,23 @@ class DecisionTree:
 
 
 class TreeNode:
-    def __init__(self, leftNode, rightNode):
-        self.leftNode = None
-        self.rightNode = None
+    def __init__(self, leftNode, rightNode, feature_index, threshold):
+        self.leftNode = leftNode
+        self.rightNode = rightNode
+        self.feature_index = feature_index
+        self.threshold = threshold
+
+    def get_left_node(self):
+        return self.leftNode
+    def get_right_node(self):
+        return self.rightNode
+    def get_feature_index(self):
+        return self.feature_index
+    def get_threshold(self):
+        return self.threshold
 
 
 
 
 
+decision_tree = DecisionTree()
