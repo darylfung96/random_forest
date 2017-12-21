@@ -21,11 +21,25 @@ class DecisionTree:
 
         self.rootNode = self._build_tree(X, y, feature_indexes, depth=0)
 
+    def predict(self, X):
+        current_node = self.rootNode
+        while type(current_node) is not TreeNode:
+            current_threshold = current_node.get_threshold()
+            current_feature_index = current_node.get_feature_index()
+
+            if X[current_feature_index] <= current_threshold:
+                current_node = current_node.get_left_node()
+            else:
+                current_node = current_node.get_right_node()
+
+        return current_node
+
+
     # do recursion in build tree function
     def _build_tree(self, X, y, feature_indexes, depth):
 
         if depth == self.max_depth:
-            return
+            return y
 
         best_feature_index, best_threshold = self._find_best_split(X, y, feature_indexes=feature_indexes)
         leftNode = self._build_tree(X, y, feature_indexes, depth=depth+1)
