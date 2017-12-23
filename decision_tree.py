@@ -1,13 +1,22 @@
 import numpy as np
 import random
+from collections import Counter
 
 from Information_helper import information_gain
 
+def classification_function(y_value):  # y_value is an array of the target value
+    y_counter = Counter(y_value)
+    return max(y_counter, key=y_counter.get)
+
 class DecisionTree:
-    def __init__(self, max_depth=10, minimum_sample_split=2):
+    def __init__(self, max_depth=10, minimum_sample_split=2, type="classification"):
+        assert type == "classification" or type == "regression"
+        self.leaf_function = lambda x: sum(x) if type == "regression" else lambda x: classification_function(x)
+
         self.max_depth = max_depth
         self.minimum_sample_split = minimum_sample_split
         self.rootNode = None
+        self.type = type
 
     def fit(self, X, y, is_random_forest=True):
         num_features = X.shape[1]
@@ -39,7 +48,7 @@ class DecisionTree:
     def _build_tree(self, X, y, feature_indexes, depth):
 
         if depth == self.max_depth:
-            return y
+            return self.leaf_function(y)
 
         best_feature_index, best_threshold = self._find_best_split(X, y, feature_indexes=feature_indexes)
         leftNode = self._build_tree(X, y, feature_indexes, depth=depth+1)
